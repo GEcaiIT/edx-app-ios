@@ -27,7 +27,21 @@ static NSString* const OEXSegmentIOWriteKey = @"SEGMENT_IO_WRITE_KEY";
 
 @end
 
+static OEXConfig* sSharedConfig;
+
 @implementation OEXConfig
+
++ (void)setSharedConfig:(OEXConfig *)config {
+    @synchronized(self) {
+        sSharedConfig = config;
+    }
+}
+
++ (instancetype)sharedConfig {
+    @synchronized(self) {
+        return sSharedConfig;
+    }
+}
 
 - (id)initWithAppBundleData {
     NSString* path = [[NSBundle mainBundle] pathForResource:@"config" ofType:@"plist"];

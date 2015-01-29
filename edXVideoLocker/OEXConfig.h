@@ -10,7 +10,11 @@
 
 @interface OEXConfig : NSObject
 
++ (void)setSharedConfig:(OEXConfig*)config;
++ (instancetype)sharedConfig;
+
 - (id)initWithAppBundleData;
+- (id)initWithDictionary:(NSDictionary*)dictionary;
 
 - (id)objectForKey:(NSString*)key;
 - (NSString*)stringForKey:(NSString*)key;

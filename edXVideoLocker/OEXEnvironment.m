@@ -12,7 +12,7 @@
 
 @interface OEXEnvironment ()
 
-@property(strong, nonatomic) OEXConfig* config;
+@property(strong, nonatomic) OEXConfig*(^configBuilder)(void);
 
 @end
 
@@ -30,9 +30,15 @@
 - (id)init {
     self = [super init];
     if(self != nil) {
-        self.config = [[OEXConfig alloc] initWithAppBundleData];
+        self.configBuilder = ^{
+            return [[OEXConfig alloc] initWithAppBundleData];
+        };
     }
     return self;
+}
+
+- (void)setupEnvironment {
+    [OEXConfig setSharedConfig:self.configBuilder()];
 }
 
 @end

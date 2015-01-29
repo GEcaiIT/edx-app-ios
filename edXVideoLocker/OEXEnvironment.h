@@ -12,11 +12,8 @@
 
 @interface OEXEnvironment : NSObject
 
-+ (instancetype)shared;
-// In the future, if, and only if, we need it for testing
-// We could add a +setShared: method, and potentially +testEnvironment and +prodEnvironment methods
-// To make appropriate environments
+- (void)setConfigBuilder:(OEXConfig*(^)(void))config;
 
-@property (readonly, strong, nonatomic) OEXConfig* config;
+- (void)setupEnvironment;
 
 @end
