@@ -12,6 +12,8 @@
 
 @interface OEXRouter : NSObject
 
+/// Note that this is not thread safe. The expectation is that this only happens
+/// immediately when the app launches or synchronously at the start of a test.
 + (void)setSharedRouter:(OEXRouter*)router;
 + (instancetype)sharedRouter;
 

@@ -32,15 +32,11 @@ static OEXConfig* sSharedConfig;
 @implementation OEXConfig
 
 + (void)setSharedConfig:(OEXConfig *)config {
-    @synchronized(self) {
-        sSharedConfig = config;
-    }
+    sSharedConfig = config;
 }
 
 + (instancetype)sharedConfig {
-    @synchronized(self) {
-        return sSharedConfig;
-    }
+    return sSharedConfig;
 }
 
 - (id)initWithAppBundleData {

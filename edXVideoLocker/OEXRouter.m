@@ -21,15 +21,11 @@ static OEXRouter* sSharedRouter;
 @implementation OEXRouter
 
 + (void)setSharedRouter:(OEXRouter *)router {
-    @synchronized(self) {
-        sSharedRouter = router;
-    }
+    sSharedRouter = router;
 }
 
 + (instancetype)sharedRouter {
-    @synchronized(self) {
-        return sSharedRouter;
-    }
+    return sSharedRouter;
 }
 
 - (id)init {
