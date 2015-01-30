@@ -9,10 +9,12 @@
 #import <Foundation/Foundation.h>
 
 @class OEXConfig;
+@class OEXRouter;
 
 @interface OEXEnvironment : NSObject
 
 - (void)setConfigBuilder:(OEXConfig*(^)(void))config;
+- (void)setRouterBuilder:(OEXRouter*(^)(void))router;
 
 - (void)setupEnvironment;
 

@@ -8,6 +8,8 @@
 
 #import "OEXFrontCourseViewController.h"
 
+#import "NSArray+OEXSafeAccess.h"
+
 #import "OEXAppDelegate.h"
 #import "OEXCourse.h"
 #import "OEXCustomTabBarViewViewController.h"
@@ -17,9 +19,10 @@
 #import "OEXConfig.h"
 #import "OEXFindCourseTableViewCell.h"
 #import "OEXFrontTableViewCell.h"
+#import "OEXRouter.h"
+#import "OEXUserCourseEnrollment.h"
 #import "Reachability.h"
 #import "SWRevealViewController.h"
-#import "OEXUserCourseEnrollment.h"
 #define ERROR_VIEW_HEIGHT 90
 
 @interface OEXFrontCourseViewController ()
@@ -55,13 +58,6 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
      if([[segue  identifier] isEqualToString:@"LaunchCourseDetailTab"]){
-         OEXFrontTableViewCell* chosenCell = sender;
-         
-         OEXCustomTabBarViewViewController *tabController = (OEXCustomTabBarViewViewController *)[segue destinationViewController];
-         tabController.course = chosenCell.course;
-         tabController.isNewCourseContentSelected = YES;
-         
-         _dataInterface.selectedCourseOnFront = chosenCell.course;
         
     }else if([[segue  identifier] isEqualToString:@"DownloadControllerSegue"])
     {
@@ -511,9 +507,6 @@
             cell.img_NewCourse.hidden = NO;
             cell.btn_NewCourseContent.hidden = NO;
         }
-        
-        
-        [(UIButton *)[cell viewWithTag:303] addTarget:self action:@selector(newCourseContentClicked:) forControlEvents:UIControlEventTouchUpInside];
 
         cell.exclusiveTouch=YES;
         
@@ -563,6 +556,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    OEXCourse* course = [self.arr_CourseData oex_safeObjectAtIndex:indexPath.row];
+    [self showCourse:course];
+    
     // End the refreshing
     [self endRefreshingData];
 }
@@ -676,17 +672,23 @@
     }
 }
 
-#pragma mark  action envent
+#pragma mark  action event
 
-- (void)newCourseContentClicked:(id)sender
+- (void)showCourse:(OEXCourse*)course {
+    if(course) {
+        [[OEXRouter sharedRouter] showCourse:course fromController:self];
+        _dataInterface.selectedCourseOnFront = course;
+    }
+}
+
+- (IBAction)newCourseContentClicked:(UIButton*)sender
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    if(!_obj_customtab){
-    _obj_customtab = [storyboard instantiateViewControllerWithIdentifier:@"CustomTabBarView"];
-   }
-    _obj_customtab.isNewCourseContentSelected = YES;
-    [self.navigationController pushViewController:_obj_customtab animated:YES];
-    
+    UIView* view = sender;
+    while(![view isKindOfClass:[OEXFrontTableViewCell class]])  {
+        view = view.superview;
+    }
+    OEXCourse* course = ((OEXFrontTableViewCell*)view).course;
+    [self showCourse:course];
 }
 
 
